@@ -1,0 +1,27 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 400;
+  min-width: 80px;
+  text-transform: capitalize;
+}
+.badge.badge-active {
+  background: rgba(57, 205, 98, 0.06);
+  color: #39CD62;
+}
+.badge.badge-inactive {
+  background: rgba(84, 95, 125, 0.06);
+  color: #545F7D;
+}
+.badge.badge-pending {
+  background: rgba(233, 178, 0, 0.06);
+  color: #E9B200;
+}
+.badge.badge-blacklisted {
+  background: rgba(228, 3, 59, 0.06);
+  color: #E4033B;
+}/*# sourceMappingURL=badge.css.map */

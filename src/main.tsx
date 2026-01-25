@@ -3,7 +3,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "@/app-routes/index";
 import App from "@/App";
 import Error from "@/pages/error";
-import "@/index.module.scss";
+import "@/index.css";
+import "@/app-styles/badge.css"
 
 const container = document.getElementById("root") as HTMLElement;
 
