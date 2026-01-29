@@ -1,46 +1,49 @@
-// 1. Variables
-$sidebar-width: 283px;
-$header-height: 100px;
-$header-height-mobile: 80px;
-
+// --- Variables ---
 $color-primary: #213F7D;
-$color-accent: #39CDCC;
+$color-secondary: #39CDCC;
 $color-bg: #FBFBFB;
 $color-white: #FFFFFF;
 $color-border: #E5E5E5;
 $color-text-muted: #545F7D;
+$color-scrollbar: #D4D4D4;
 
-$transition-base: 0.3s ease;
-$shadow-sidebar: 0 0 40px rgba(0, 0, 0, 0.05);
+$sidebar-width: 283px;
+$transition-speed: 0.3s;
 
-// 2. Mixins
-@mixin scrollbar-custom {
-  &::-webkit-scrollbar { width: 6px; }
-  &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb {
-    background: #D4D4D4;
-    border-radius: 3px;
+
+.main-wrapper {
+  flex: 1;
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 1024px) {
+    margin-left: 0;
   }
 }
 
-// 3. Global Styles
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Work Sans', -apple-system, sans-serif;
+.main-content {
+  flex: 1;
+  padding: 40px;
   background: $color-bg;
-  overflow-x: hidden;
+
+  @media (max-width: 768px) { padding: 20px; }
+  @media (max-width: 480px) { padding: 16px; }
+
+  .content-placeholder {
+    h1 {
+      font-size: 24px;
+      color: $color-primary;
+      margin-bottom: 16px;
+    }
+    p {
+      color: $color-text-muted;
+      font-size: 16px;
+    }
+  }
 }
 
-// 4. Layout & Sidebar
-.dashboard-layout {
-  display: flex;
-  min-height: 100vh;
-}
 
 .sidebar {
   width: $sidebar-width;
@@ -51,14 +54,17 @@ body {
   left: 0;
   top: 0;
   overflow-y: auto;
-  transition: transform $transition-base;
+  transition: transform $transition-speed ease;
   z-index: 1000;
-  box-shadow: $shadow-sidebar;
-  @include scrollbar-custom;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
 
-  @media (max-width: 1024px) {
-    transform: translateX(-100%);
-    &.sidebar-open { transform: translateX(0); }
+  &::-webkit-scrollbar {
+    width: 6px;
+    &-track { background: transparent; }
+    &-thumb {
+      background: $color-scrollbar;
+      border-radius: 3px;
+    }
   }
 
   &-logo {
@@ -74,9 +80,43 @@ body {
     }
   }
 
+  &-organization {
+    padding: 0 30px 30px;
+
+    .organization-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: none;
+      border: none;
+      color: $color-primary;
+      font-size: 16px;
+      cursor: pointer;
+      font-family: inherit;
+
+      svg:last-child {
+        margin-left: auto;
+        transition: transform $transition-speed ease;
+        &.rotate { transform: rotate(180deg); }
+      }
+    }
+  }
+
+  &-section {
+    margin-bottom: 30px;
+    &-title {
+      font-size: 12px;
+      color: $color-text-muted;
+      font-weight: 500;
+      padding: 0 30px;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+  }
+
   &-menu {
     list-style: none;
-
     &-item {
       width: 100%;
       display: flex;
@@ -90,8 +130,9 @@ body {
       font-size: 16px;
       cursor: pointer;
       transition: all 0.2s ease;
-      opacity: 0.6;
+      font-family: inherit;
       text-align: left;
+      opacity: 0.6;
 
       &:hover {
         opacity: 1;
@@ -99,27 +140,75 @@ body {
       }
 
       &.active {
-        background: rgba($color-accent, 0.06);
-        border-left-color: $color-accent;
+        background: rgba($color-secondary, 0.06);
+        border-left-color: $color-secondary;
         opacity: 1;
+      }
+
+      .menu-icon {
+        display: flex;
+        align-items: center;
+        color: $color-primary;
+      }
+
+      .menu-label { flex: 1; }
+
+      .menu-badge {
+        background: $color-secondary;
+        color: $color-white;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 10px;
       }
     }
   }
 
-  &-section-title {
+  &-version-container {
+    padding-top: 15px;
+    border-top: 1px solid $color-border;
+  }
+
+  &-version {
+    padding: 30px;
+    color: $color-primary;
     font-size: 12px;
-    color: $color-text-muted;
-    font-weight: 500;
-    padding: 0 30px;
-    margin: 30px 0 10px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    opacity: 0.4;
+    margin-top: auto;
+  }
+
+  &-close-btn {
+    display: none;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: $color-primary;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  @media (max-width: 1024px) {
+    transform: translateX(-100%);
+    &.sidebar-open { transform: translateX(0); }
+    &-close-btn { display: block; }
   }
 }
 
-// 5. Header
+.sidebar-overlay {
+  display: none;
+  @media (max-width: 1024px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}
+
+
 .header {
-  height: $header-height;
+  height: 100px;
   background: $color-white;
   border-bottom: 1px solid $color-border;
   display: flex;
@@ -129,91 +218,98 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 
   @media (max-width: 768px) {
-    height: $header-height-mobile;
     padding: 0 20px;
+    height: 80px;
   }
 
-  &-search {
+  &-left {
     display: flex;
-    max-width: 400px;
+    align-items: center;
+    gap: 20px;
     flex: 1;
-    border: 1px solid $color-border;
-    border-radius: 8px;
-    overflow: hidden;
 
-    @media (max-width: 768px) { max-width: 200px; }
-    @media (max-width: 480px) { display: none; }
-
-    .search-input {
-      flex: 1;
-      border: none;
-      padding: 12px 16px;
-      outline: none;
-      color: $color-primary;
-      &::placeholder { color: #9CA3AF; }
-    }
-
-    .search-btn {
-      background: $color-accent;
-      border: none;
-      padding: 0 20px;
-      color: $color-white;
-      cursor: pointer;
+    & > div:last-child { 
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
   }
 
+  &-right {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    @media (max-width: 1024px) { gap: 20px; }
+    @media (max-width: 480px) { gap: 12px; }
+  }
+
+  &-link {
+    color: $color-primary;
+    text-decoration: underline;
+    font-size: 16px;
+    transition: opacity 0.2s ease;
+    &:hover { opacity: 0.7; }
+    @media (max-width: 1024px) { display: none; }
+  }
+
+  &-icon-btn {
+    background: none;
+    border: none;
+    color: $color-primary;
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+    &:hover { background: rgba($color-primary, 0.05); }
+    @media (max-width: 480px) { padding: 4px; }
+  }
+
+  
   &-user {
     display: flex;
     align-items: center;
     gap: 12px;
-    
+    cursor: pointer;
+
     .user-avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
       object-fit: cover;
-      @media (max-width: 480px) { width: 32px; height: 32px; }
+      @media (max-width: 480px) {
+        width: 32px;
+        height: 32px;
+      }
     }
-    
+
     .user-name {
       color: $color-primary;
+      font-size: 16px;
       font-weight: 500;
       @media (max-width: 768px) { display: none; }
     }
   }
+
+  .mobile-menu-btn, .header-logo-mobile {
+    display: none;
+    @media (max-width: 1024px) { display: flex; 
+    img{
+  width: 100%;
+  height: auto;
 }
-
-// 6. Main Content Area
-.main-wrapper {
-  flex: 1;
-  margin-left: $sidebar-width;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  transition: margin-left $transition-base;
-
-  @media (max-width: 1024px) {
-    margin-left: 0;
+    }
   }
-}
 
-.main-content {
-  flex: 1;
-  padding: 40px;
-  @media (max-width: 768px) { padding: 20px; }
-  @media (max-width: 480px) { padding: 16px; }
-}
-
-// 7. Overlay
-.sidebar-overlay {
-  display: none;
-  @media (max-width: 1024px) {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+  .mobile-menu-btn {
+    background: none;
+    border: none;
+    color: $color-primary;
+    cursor: pointer;
+    padding: 8px;
   }
 }

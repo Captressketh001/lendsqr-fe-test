@@ -1,0 +1,228 @@
+$color-primary: #213F7D;
+$color-accent: #39CDCC;
+$color-accent-hover: #2DB8B7;
+$color-text-main: #545F7D;
+$color-text-placeholder: #A3A3A3;
+$color-border: #D4D4D4;
+$color-white: #fff;
+
+
+@mixin tablet {
+  @media (max-width: 1024px) { @content; }
+}
+
+@mixin mobile-lg {
+  @media (max-width: 768px) { @content; }
+}
+
+@mixin mobile-sm {
+  @media (max-width: 480px) { @content; }
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.login-container {
+  display: flex;
+  min-height: 100vh;
+  background: $color-white;
+
+  @include mobile-lg {
+    flex-direction: column;
+  }
+}
+
+.left-section {
+  flex: 1;
+  padding: 60px 80px;
+  display: flex;
+  flex-direction: column;
+  background: $color-white;
+
+  @include tablet { padding: 40px 50px; }
+  @include mobile-lg { 
+    padding: 30px 24px;
+    min-height: auto;
+  }
+  @include mobile-sm { padding: 24px 20px; }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 80px;
+
+    @include mobile-lg { margin-bottom: 40px; }
+
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+
+    &-text {
+      font-size: 28px;
+      font-weight: 700;
+      color: $color-primary;
+
+      @include mobile-sm { font-size: 24px; }
+    }
+  }
+
+  .illustration {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+
+    @include tablet { max-width: 450px; }
+    @include mobile-lg { 
+      max-width: 350px;
+      margin: 0 auto;
+    }
+    @include mobile-sm { max-width: 280px; }
+
+    img {
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+    }
+  }
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: $color-white;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.04);
+
+  @include mobile-lg { 
+    padding: 40px 24px;
+    box-shadow: none;
+  }
+}
+
+.login-form-container {
+  width: 100%;
+  max-width: 450px;
+
+  @include mobile-lg { max-width: 100%; }
+
+  .welcome-text {
+    font-size: 40px;
+    font-weight: 700;
+    color: $color-primary;
+    margin-bottom: 12px;
+
+    @include tablet { font-size: 36px; }
+    @include mobile-lg { font-size: 32px; }
+    @include mobile-sm { font-size: 28px; }
+  }
+
+  .subtitle {
+    font-size: 20px;
+    color: $color-text-main;
+    margin-bottom: 60px;
+    font-weight: 400;
+
+    @include tablet { 
+      font-size: 18px; 
+      margin-bottom: 40px;
+    }
+    @include mobile-lg { font-size: 16px; }
+    @include mobile-sm { 
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 24px;
+  position: relative;
+
+  .form-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid $color-border;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: inherit;
+
+    @include mobile-sm { 
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    &:focus {
+      border-color: $color-accent;
+    }
+
+    &::placeholder {
+      color: $color-text-placeholder;
+    }
+  }
+
+  .show-password {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: $color-accent;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
+}
+
+.forgot-password {
+  display: block;
+  color: $color-accent;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  letter-spacing: 0.5px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 16px;
+  background: $color-accent;
+  color: $color-white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @include mobile-sm { 
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

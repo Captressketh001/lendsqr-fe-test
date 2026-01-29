@@ -17,27 +17,6 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
         {/* </main> */}
       </div>
 
-      <style>{`
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        body {
-          font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          background: #FBFBFB;
-          overflow-x: hidden;
-        }
-
-        .dashboard-layout {
-          display: flex;
-          min-height: 100vh;
-        }
-
-        
-        }
-      `}</style>
     </div>
   );
 };

@@ -13,66 +13,13 @@ $transition-base: all 0.3s ease;
 $shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
 $shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-// 2. Mixins
+
 @mixin flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// 3. Reset & Global
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: $font-main;
-  background: $color-bg-body;
-}
-
-// 4. Layout Components
-.app-container {
-  padding: 40px;
-  max-width: 1400px;
-  margin: 0 auto;
-
-  @media (max-width: 768px) {
-    padding: 20px;
-  }
-}
-
-.demo {
-  &-title {
-    font-size: 32px;
-    color: $color-primary;
-    margin-bottom: 40px;
-    font-weight: 600;
-
-    @media (max-width: 768px) {
-      font-size: 24px;
-      margin-bottom: 30px;
-    }
-  }
-
-  &-section {
-    margin-bottom: 50px;
-
-    h3 {
-      font-size: 20px;
-      color: $color-text-muted;
-      margin-bottom: 20px;
-      font-weight: 500;
-
-      @media (max-width: 480px) {
-        font-size: 18px;
-      }
-    }
-  }
-}
-
-// 5. Stats Cards
 .stats {
   &-grid {
     display: grid;
@@ -131,55 +78,6 @@ body {
       @media (max-width: 768px) {
         font-size: 20px;
       }
-    }
-  }
-}
-
-// 6. Search Bar
-.search {
-  &-bar {
-    display: flex;
-    max-width: 400px;
-    background: $color-bg-card;
-    border: 1px solid $color-border;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: $shadow-sm;
-
-    @media (max-width: 768px) {
-      max-width: 100%;
-    }
-  }
-
-  &-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding: 14px 20px;
-    font-size: 14px;
-    color: $color-primary;
-    font-family: inherit;
-
-    &::placeholder {
-      color: $color-placeholder;
-    }
-  }
-
-  &-button {
-    background: $color-accent;
-    border: none;
-    padding: 0 24px;
-    cursor: pointer;
-    color: #FFFFFF;
-    transition: $transition-base;
-    @include flex-center;
-
-    &:hover {
-      background: $color-accent-hover;
-    }
-
-    &:active {
-      transform: scale(0.98);
     }
   }
 }

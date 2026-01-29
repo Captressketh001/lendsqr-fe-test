@@ -1,0 +1,282 @@
+// --- Variables ---
+$color-primary: #213F7D;
+$color-secondary: #39CDCC;
+$color-text-main: #545F7D;
+$color-bg-light: #F5F5F7;
+$color-white: #FFFFFF;
+$color-border: #E5E5E5;
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+
+// --- Mixins ---
+@mixin card-style {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 4px;
+  box-shadow: $shadow-sm;
+}
+
+@mixin flex-column($gap: 8px) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+// --- Main Container ---
+.user-details-page {
+  padding: 20px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (max-width: 480px) {
+    padding: 16px;
+  }
+}
+
+// --- Back Button ---
+.back-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: none;
+  border: none;
+  color: $color-text-main;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: opacity 0.2s ease;
+  font-family: inherit;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
+}
+
+// --- Page Header ---
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+
+  .page-title {
+    font-size: 24px;
+    color: $color-primary;
+    font-weight: 500;
+
+    @media (max-width: 480px) {
+      font-size: 20px;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 20px;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+
+    .header-actions {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+}
+
+// --- User Summary Card (Avatar, Tier, Balance) ---
+.user-summary-card {
+  @include card-style;
+  margin-bottom: 30px;
+
+  .user-summary-content {
+    padding: 30px;
+    @media (max-width: 768px) { padding: 20px; }
+  }
+
+  .user-basic-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    @media (max-width: 1024px) { flex-wrap: wrap; }
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+    }
+  }
+
+  .user-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .user-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $color-bg-light;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .user-name-section {
+    @include flex-column(8px);
+    .user-name {
+      font-size: 22px;
+      color: $color-primary;
+      font-weight: 500;
+      @media (max-width: 480px) { font-size: 18px; }
+    }
+    .user-id {
+      font-size: 14px;
+      color: $color-text-main;
+    }
+  }
+
+  .divider-vertical {
+    width: 1px;
+    height: 60px;
+    background: $color-border;
+    @media (max-width: 1024px) { display: none; }
+  }
+
+  .user-tier {
+    @include flex-column(8px);
+    .tier-label {
+      font-size: 14px;
+      color: $color-text-main;
+      font-weight: 500;
+    }
+    .star-rating {
+      display: flex;
+      gap: 6px;
+    }
+  }
+
+  .user-balance {
+    @include flex-column(8px);
+    .balance-amount {
+      font-size: 22px;
+      color: $color-primary;
+      font-weight: 500;
+      @media (max-width: 480px) { font-size: 18px; }
+    }
+    .bank-info {
+      font-size: 12px;
+      color: $color-primary;
+    }
+  }
+}
+
+// --- Tabs Navigation ---
+.tabs-container {
+  display: flex;
+  border-top: 1px solid $color-border;
+
+  @media (max-width: 1024px) {
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: $color-text-main;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    white-space: nowrap;
+
+    &:hover {
+      color: $color-secondary;
+    }
+
+    &.active {
+      color: $color-secondary;
+      border-bottom-color: $color-secondary;
+    }
+
+    @media (max-width: 1024px) {
+      flex: none;
+      min-width: 120px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 14px;
+      padding: 12px 16px;
+    }
+  }
+}
+
+// --- Detailed Info Card ---
+.user-info-card {
+  @include card-style;
+  padding: 30px;
+
+  @media (max-width: 480px) {
+    padding: 20px;
+  }
+
+  .info-section {
+    margin-bottom: 30px;
+    &:last-child { margin-bottom: 0; }
+
+    .section-title {
+      font-size: 16px;
+      color: $color-primary;
+      font-weight: 500;
+      margin-bottom: 30px;
+    }
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 30px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .info-item {
+    @include flex-column(8px);
+
+    .info-label {
+      font-size: 12px;
+      color: $color-text-main;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .info-value {
+      font-size: 16px;
+      color: $color-text-main;
+      font-weight: 400;
+    }
+  }
+
+  .section-divider {
+    height: 1px;
+    background: $color-border;
+    margin: 30px 0;
+  }
+}

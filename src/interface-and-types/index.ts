@@ -19,7 +19,7 @@ export interface PaginationProps {
 }
 
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'outlined';
+  variant?: 'primary' | 'secondary' | 'danger' | 'outlined' | 'outlined-primary';
   size?: 'small' | 'medium' | 'large';
   children: React.ReactNode;
   onClick?: () => void;

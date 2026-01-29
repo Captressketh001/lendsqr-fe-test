@@ -1,413 +1,401 @@
-
+import { useState, useEffect, useMemo } from "react";
 import {
-  
-  Users,
   UserCheck,
-  
-  Briefcase,
-  PiggyBank,
-  
-  MoreVertical,
-  Filter,
-} from 'lucide-react';
-import { LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+  ListFilter,
+  Eye,
+  UserX,
+} from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import StatsCard from "@/app-components/card";
+import {
+  getPaginatedUsers,
+  updateUserStatus,
+  blacklistUser,
+  getUsers,
+} from "@/api-services/user";
+import {
+  UserData,
+  UserStatus,
+  Column,
+  FilterValues,
+  FilterParams,
+} from "@/interface-and-types";
+import Badge from "@/app-components/badge";
+import Dropdown from "@/app-components/dropdown";
+import FilterForm from "@/app-components/filter";
+import Pagination from "@/app-components/pagination";
 
-
-import StatsCard from '@/app-components/stats-card';
-
-// Dashboard Component
 const Dashboard = () => {
- 
+  const [users, setUsers] = useState<UserData[]>([]);
+  const [allUsers, setAllUsers] = useState<UserData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [filterOpen, setFilterOpen] = useState<string | null>(null);
 
-  // Data for charts
-  const userGrowthData = [
-    { month: 'Jan', users: 4000, loans: 2400 },
-    { month: 'Feb', users: 3000, loans: 1398 },
-    { month: 'Mar', users: 2000, loans: 9800 },
-    { month: 'Apr', users: 2780, loans: 3908 },
-    { month: 'May', users: 1890, loans: 4800 },
-    { month: 'Jun', users: 2390, loans: 3800 },
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("page_size")) || 10;
+
+  const filters: FilterParams = {
+    query: searchParams.get("query") || "",
+    organization: searchParams.get("organization") || "",
+    username: searchParams.get("username") || "",
+    email: searchParams.get("email") || "",
+    phoneNumber: searchParams.get("phone") || "",
+    status: searchParams.get("status") || "",
+    date: searchParams.get("date") || "",
+  };
+
+  const hasActiveFilters = Object.values(filters).some((value) => value !== "");
+
+  const columns: Column[] = [
+    { key: "organization", label: "ORGANIZATION", sortable: true },
+    { key: "username", label: "USERNAME", sortable: true },
+    { key: "email", label: "EMAIL", sortable: true },
+    { key: "phoneNumber", label: "PHONE NUMBER", sortable: true },
+    { key: "dateJoined", label: "DATE JOINED", sortable: true },
+    { key: "status", label: "STATUS", sortable: true },
   ];
 
-  const loanStatusData = [
-    { name: 'Active', value: 400, color: '#39CD62' },
-    { name: 'Pending', value: 300, color: '#E9B200' },
-    { name: 'Rejected', value: 200, color: '#E4033B' },
-    { name: 'Completed', value: 278, color: '#39CDCC' },
-  ];
+  const stats = useMemo(() => {
+    const activeUsers = allUsers.filter((u) => u.status === "active").length;
+    const usersWithLoans = allUsers.filter(
+      (u) => u.accountBalance && u.accountBalance > 0,
+    ).length;
+    const usersWithSavings = allUsers.filter(
+      (u) => u.accountBalance && u.accountBalance > 50000,
+    ).length;
 
-  const recentTransactions = [
-    { id: 1, user: 'Adedeji Afolabi', type: 'Loan Disbursement', amount: '₦500,000', status: 'completed', date: 'May 15, 2024' },
-    { id: 2, user: 'Grace Effiom', type: 'Savings Deposit', amount: '₦150,000', status: 'completed', date: 'May 15, 2024' },
-    { id: 3, user: 'Tosin Dokunmu', type: 'Loan Repayment', amount: '₦75,000', status: 'pending', date: 'May 14, 2024' },
-    { id: 4, user: 'Debby Ogana', type: 'Loan Request', amount: '₦300,000', status: 'pending', date: 'May 14, 2024' },
-  ];
+    return {
+      totalUsers: allUsers.length,
+      activeUsers,
+      usersWithLoans,
+      usersWithSavings,
+    };
+  }, [allUsers]);
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "active":
+        return "Active";
+      case "inactive":
+        return "Inactive";
+      case "pending":
+        return "Pending";
+      case "blacklisted":
+        return "Blacklisted";
+      default:
+        return status;
+    }
+  };
+
+  useEffect(() => {
+    loadAllUsersForStats();
+  }, []);
+
+  useEffect(() => {
+    loadUsers();
+    // eslint-disable-next-line
+  }, [
+    currentPage,
+    pageSize,
+    filters.query,
+    filters.organization,
+    filters.username,
+    filters.email,
+    filters.phoneNumber,
+    filters.status,
+    filters.date,
+  ]);
+
+  const loadAllUsersForStats = async () => {
+    try {
+      const result = await getUsers();
+      setAllUsers(result);
+    } catch (err) {
+      console.error("Failed to load users for stats:", err);
+    }
+  };
+
+  const loadUsers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const result = await getPaginatedUsers(currentPage, pageSize, filters);
+      setUsers(result.users);
+      setTotalPages(result.totalPages);
+      setTotalUsers(result.total);
+    } catch (err) {
+      setError("Failed to load users. Please try again.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBlacklistUser = async (id: string) => {
+    try {
+      await blacklistUser(id);
+      loadUsers();
+      loadAllUsersForStats();
+    } catch (err) {
+      setError("Failed to blacklist user. Please try again.");
+      console.error(err);
+    }
+  };
+
+  const handleActivateUser = async (id: string, status: UserStatus) => {
+    try {
+      await updateUserStatus(id, status);
+      loadUsers();
+      loadAllUsersForStats();
+    } catch (err) {
+      setError("Failed to update user status. Please try again.");
+      console.error(err);
+    }
+  };
+
+  const handleFilter = (filterValues: FilterValues) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", "1");
+
+    if (filterValues.organization)
+      params.set("organization", filterValues.organization);
+    else params.delete("organization");
+
+    if (filterValues.username) params.set("username", filterValues.username);
+    else params.delete("username");
+
+    if (filterValues.email) params.set("email", filterValues.email);
+    else params.delete("email");
+
+    if (filterValues.status) params.set("status", filterValues.status);
+    else params.delete("status");
+
+    if (filterValues.phoneNumber) params.set("phone", filterValues.phoneNumber);
+    else params.delete("phone");
+
+    if (filterValues.date) params.set("date", filterValues.date);
+    else params.delete("date");
+
+    navigate(`?${params.toString()}`);
+    setFilterOpen(null);
+  };
+
+  const handleResetFilter = () => {
+    const params = new URLSearchParams();
+    params.set("page", "1");
+    if (filters.query) params.set("query", filters.query);
+    navigate(`?${params.toString()}`);
+    setFilterOpen(null);
+  };
+
+  const handleClearAllFilters = () => {
+    navigate("?page=1");
+  };
 
   return (
-    
-        <main className="main-content">
-          <h1 className="page-title">Dashboard</h1>
+    <main className="main-content">
+      <h1 className="page-title">Users</h1>
 
-          
-          <div className="stats-grid">
-            <StatsCard
-              icon={<Users size={24} />}
-              label="TOTAL USERS"
-              value="2,453"
-              iconColor="#DF18FF"
-              iconBgColor="#FFF0FF"
-              trend={{ value: 12.5, isPositive: true }}
-            />
-            <StatsCard
-              icon={<UserCheck size={24} />}
-              label="ACTIVE USERS"
-              value="2,453"
-              iconColor="#5718FF"
-              iconBgColor="#EDE5FF"
-              trend={{ value: 8.3, isPositive: true }}
-            />
-            <StatsCard
-              icon={<Briefcase size={24} />}
-              label="USERS WITH LOANS"
-              value="12,453"
-              iconColor="#F55F44"
-              iconBgColor="#FFE5E0"
-              trend={{ value: 3.2, isPositive: false }}
-            />
-            <StatsCard
-              icon={<PiggyBank size={24} />}
-              label="USERS WITH SAVINGS"
-              value="102,453"
-              iconColor="#FF3366"
-              iconBgColor="#FFE5EC"
-              trend={{ value: 15.7, isPositive: true }}
-            />
+      <div className="stats-grid">
+        <StatsCard
+          icon={<img src="dashboard-user.svg" />}
+          label="USERS"
+          value={stats.totalUsers.toLocaleString()}
+          iconColor="#DF18FF"
+          iconBgColor="#FFF0FF"
+        />
+        <StatsCard
+          icon={<img src="active-user.svg" />}
+          label="ACTIVE USERS"
+          value={stats.activeUsers.toLocaleString()}
+          iconColor="#5718FF"
+          iconBgColor="#EDE5FF"
+        />
+        <StatsCard
+          icon={<img src="user-with-loan.svg" />}
+          label="USERS WITH LOANS"
+          value={stats.usersWithLoans.toLocaleString()}
+          iconColor="#F55F44"
+          iconBgColor="#FFE5E0"
+        />
+        <StatsCard
+          icon={<img src="user-with-savings.svg" />}
+          label="USERS WITH SAVINGS"
+          value={stats.usersWithSavings.toLocaleString()}
+          iconColor="#FF3366"
+          iconBgColor="#FFE5EC"
+        />
+      </div>
+
+      {hasActiveFilters && (
+        <div className="filters-info">
+          <div className="filters-header">
+            <p>Active Filters:</p>
+            <button onClick={handleClearAllFilters} className="clear-all-btn">
+              Clear All
+            </button>
           </div>
-
-          {/* Charts Section */}
-          <div className="charts-section">
-            <div className="chart-card">
-              <div className="chart-header">
-                <h3>User Growth & Loan Trends</h3>
-                <button className="chart-filter-btn">
-                  <Filter size={16} />
-                  Last 6 Months
-                </button>
-              </div>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={userGrowthData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5" />
-                  <XAxis dataKey="month" stroke="#545F7D" />
-                  <YAxis stroke="#545F7D" />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="users" stroke="#39CDCC" strokeWidth={2} />
-                  <Line type="monotone" dataKey="loans" stroke="#213F7D" strokeWidth={2} />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div className="chart-card">
-              <div className="chart-header">
-                <h3>Loan Status Distribution</h3>
-              </div>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={loanStatusData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) => `${name} ${percent && (percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {loanStatusData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+          <div className="filters-tags">
+            {filters.query && (
+              <span className="filter-tag">Search: "{filters.query}"</span>
+            )}
+            {filters.organization && (
+              <span className="filter-tag">
+                Organization: {filters.organization}
+              </span>
+            )}
+            {filters.username && (
+              <span className="filter-tag">Username: {filters.username}</span>
+            )}
+            {filters.email && (
+              <span className="filter-tag">Email: {filters.email}</span>
+            )}
+            {filters.phoneNumber && (
+              <span className="filter-tag">Phone: {filters.phoneNumber}</span>
+            )}
+            {filters.status && (
+              <span className="filter-tag">
+                Status: {getStatusText(filters.status)}
+              </span>
+            )}
+            {filters.date && (
+              <span className="filter-tag">
+                Date: {new Date(filters.date).toLocaleDateString()}
+              </span>
+            )}
           </div>
+          <p className="results-count">
+            {totalUsers} {totalUsers === 1 ? "user" : "users"} found
+          </p>
+        </div>
+      )}
 
-          {/* Recent Transactions */}
-          <div className="transactions-section">
-            <div className="section-header">
-              <h3>Recent Transactions</h3>
-              <a href="#" className="view-all-link">View All</a>
-            </div>
-            <div className="transactions-table">
-              <table>
+      <div className="table-container">
+        {loading ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Loading users...</p>
+          </div>
+        ) : error ? (
+          <div className="error-state">
+            <p>{error}</p>
+            <button onClick={loadUsers} className="retry-btn">
+              Retry
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="table-wrapper">
+              <table className="data-table">
                 <thead>
                   <tr>
-                    <th>User</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Date</th>
-                    <th>Status</th>
+                    {columns.map((column) => (
+                      <th key={column.key}>
+                        <div className="th-content">
+                          <span>{column.label}</span>
+                          {column.sortable && (
+                            <button
+                              className="filter-icon-btn"
+                              onClick={() =>
+                                setFilterOpen(
+                                  filterOpen === column.key ? null : column.key,
+                                )
+                              }
+                              type="button"
+                            >
+                              <ListFilter size={14} />
+                            </button>
+                          )}
+                          {filterOpen === column.key && (
+                            <FilterForm
+                              isOpen={filterOpen === column.key}
+                              onClose={() => setFilterOpen(null)}
+                              onFilter={handleFilter}
+                              onReset={handleResetFilter}
+                            />
+                          )}
+                        </div>
+                      </th>
+                    ))}
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {recentTransactions.map((transaction) => (
-                    <tr key={transaction.id}>
-                      <td>{transaction.user}</td>
-                      <td>{transaction.type}</td>
-                      <td className="amount">{transaction.amount}</td>
-                      <td>{transaction.date}</td>
-                      <td>
-                        <span className={`status-badge ${transaction.status}`}>
-                          {transaction.status === 'completed' ? 'Completed' : 'Pending'}
-                        </span>
-                      </td>
-                      <td>
-                        <button className="action-btn">
-                          <MoreVertical size={16} />
-                        </button>
+                  {users.length === 0 ? (
+                    <tr>
+                      <td colSpan={columns.length + 1} className="empty-state">
+                        {hasActiveFilters
+                          ? "No users found matching the current filters"
+                          : "No users found"}
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    users.map((user) => (
+                      <tr key={user.id}>
+                        <td>{user.organization}</td>
+                        <td>{user.username}</td>
+                        <td>{user.email}</td>
+                        <td>{user.phoneNumber}</td>
+                        <td>{user.dateJoined}</td>
+                        <td>
+                          <Badge status={user.status}>
+                            {getStatusText(user.status)}
+                          </Badge>
+                        </td>
+                        <td>
+                          <Dropdown
+                            items={[
+                              {
+                                icon: <Eye size={16} />,
+                                label: "View Details",
+                                onClick: () => navigate(`/user/${user.id}`),
+                              },
+                              {
+                                icon: <UserX size={16} />,
+                                label: "Blacklist User",
+                                onClick: () => handleBlacklistUser(user.id),
+                              },
+                              {
+                                icon: <UserCheck size={16} />,
+                                label: `${user.status === "active" ? "Deactivate User" : "Activate User"}`,
+                                onClick: () =>
+                                  handleActivateUser(
+                                    user.id,
+                                    user.status === "active"
+                                      ? "inactive"
+                                      : "active",
+                                  ),
+                              },
+                            ]}
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
-          </div>
-          <style>{`
-        
-        
-        /* Stats Grid */
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 26px;
-          margin-bottom: 40px;
-        }
+          </>
+        )}
+      </div>
 
-        .stats-card {
-          background: #FFFFFF;
-          border: 1px solid #E5E5E5;
-          border-radius: 4px;
-          padding: 30px;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-        }
-
-        .stats-card:hover {
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          transform: translateY(-2px);
-        }
-
-        .icon-wrapper {
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 14px;
-        }
-
-        .label {
-          font-size: 14px;
-          color: #545F7D;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          margin-bottom: 12px;
-          font-weight: 500;
-        }
-
-        .stats-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .value {
-          font-size: 24px;
-          color: #213F7D;
-          font-weight: 600;
-        }
-
-        .trend {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .trend.positive {
-          color: #39CD62;
-        }
-
-        .trend.negative {
-          color: #E4033B;
-        }
-
-        /* Charts Section */
-        .charts-section {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-          gap: 26px;
-          margin-bottom: 40px;
-        }
-
-        .chart-card {
-          background: #FFFFFF;
-          border: 1px solid #E5E5E5;
-          border-radius: 4px;
-          padding: 30px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-        }
-
-        .chart-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 30px;
-        }
-
-        .chart-header h3 {
-          font-size: 18px;
-          color: #213F7D;
-          font-weight: 500;
-        }
-
-        .chart-filter-btn {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 16px;
-          background: #F5F5F7;
-          border: 1px solid #E5E5E5;
-          border-radius: 6px;
-          color: #545F7D;
-          font-size: 14px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .chart-filter-btn:hover {
-          background: #EBEBED;
-        }
-
-        /* Transactions Section */
-        .transactions-section {
-          background: #FFFFFF;
-          border: 1px solid #E5E5E5;
-          border-radius: 4px;
-          padding: 30px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-        }
-
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-
-        .section-header h3 {
-          font-size: 18px;
-          color: #213F7D;
-          font-weight: 500;
-        }
-
-        .view-all-link {
-          color: #39CDCC;
-          text-decoration: none;
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .transactions-table {
-          overflow-x: auto;
-        }
-
-        .transactions-table table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-
-        .transactions-table th {
-          text-align: left;
-          padding: 16px 20px;
-          font-size: 12px;
-          color: #545F7D;
-          font-weight: 500;
-          border-bottom: 1px solid #E5E5E5;
-          letter-spacing: 0.5px;
-        }
-
-        .transactions-table td {
-          padding: 20px;
-          color: #545F7D;
-          font-size: 14px;
-          border-bottom: 1px solid #EDF1F7;
-        }
-
-        .transactions-table tr:hover {
-          background: #FAFAFA;
-        }
-
-        .amount {
-          font-weight: 600;
-          color: #213F7D;
-        }
-
-        .status-badge {
-          display: inline-flex;
-          align-items: center;
-          padding: 6px 16px;
-          border-radius: 100px;
-          font-size: 14px;
-          font-weight: 400;
-        }
-
-        .status-badge.completed {
-          background: rgba(57, 205, 98, 0.06);
-          color: #39CD62;
-        }
-
-        .status-badge.pending {
-          background: rgba(233, 178, 0, 0.06);
-          color: #E9B200;
-        }
-
-        .action-btn {
-          background: none;
-          border: none;
-          color: #545F7D;
-          cursor: pointer;
-          padding: 4px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 1024px) {
-          
-          
-          .charts-section {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        @media (max-width: 768px) {
-          
-          
-
-          .stats-grid {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-      }
-            `}
-            </style>
-        </main>
-    //   </div>
-
-      
-        // </div>
-         );
+      {totalPages > 1 && (
+        <Pagination
+          totalPages={totalPages}
+          entriesPerPage={pageSize}
+          totalEntries={totalUsers}
+        />
+      )}
+     
+    </main>
+  );
 };
-export default Dashboard
+
+export default Dashboard;

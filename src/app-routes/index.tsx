@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import { type RouteObject } from "react-router-dom";
 import Login from "@/pages/login";
 import Layout from "@/pages/layout";
-// import Dashboard from "@/pages/dashboard";
 import Users from "@/pages/users";
 import UserDetails from "@/pages/user-detail";
 export const routes: Array<RouteObject> = [
@@ -21,9 +20,8 @@ export const routes: Array<RouteObject> = [
       element: (
         <Suspense>
           <Layout>
-            <Users/>
+            {/* <Users/> */}
           </Layout>
-              
         </Suspense>
       ),
     }
@@ -53,16 +51,13 @@ export const routes: Array<RouteObject> = [
       path: "",
       element: (
         <Suspense>
-         
               <Layout> 
                 <UserDetails/>
               </Layout>
-            
         </Suspense>
       ),
     }
     ],
-
   },
 ]
 
