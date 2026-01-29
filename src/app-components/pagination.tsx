@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { PaginationProps } from '@/interface-and-types';
-
 
 const Pagination = ({
   totalPages,
   entriesPerPage,
   totalEntries,
-  currentPage: propCurrentPage = 1,
-  onPageChange,
-  onPageSizeChange,
 }: PaginationProps) => {
-  const [currentPage, setCurrentPage] = useState(propCurrentPage);
-  const [pageSize, setPageSize] = useState(entriesPerPage);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  // Read from URL params - single source of truth
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const pageSize = Number(searchParams.get("page_size")) || entriesPerPage;
 
   const generatePagination = (current: number, total: number): (number | string)[] => {
     if (total <= 7) {
@@ -30,20 +31,28 @@ const Pagination = ({
     return [1, '...', current - 1, current, current + 1, '...', total];
   };
 
+  // Update URL params when page changes
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
-    onPageChange?.(page);
+    
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page.toString());
+    navigate(`?${params.toString()}`, { replace: true });
   };
 
+  // Update URL params when page size changes
   const handlePageSizeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const newSize = Number(event.target.value);
-    setPageSize(newSize);
-    setCurrentPage(1);
-    onPageSizeChange?.(newSize);
+    
+    const params = new URLSearchParams(searchParams);
+    params.set("page_size", newSize.toString());
+    params.set("page", "1"); // Reset to page 1 when changing page size
+    navigate(`?${params.toString()}`, { replace: true });
   };
 
   const allPages = generatePagination(currentPage, totalPages);
+  // const startIndex = (currentPage - 1) * pageSize + 1;
+  // const endIndex = Math.min(startIndex + pageSize - 1, totalEntries);
 
   return (
     <div className="pagination-container">
@@ -69,6 +78,7 @@ const Pagination = ({
           className="pagination-arrow"
           onClick={() => handlePageChange(currentPage - 1)}
           disabled={currentPage === 1}
+          type="button"
         >
           <ChevronLeft size={16} />
         </button>
@@ -79,6 +89,7 @@ const Pagination = ({
               <span className="pagination-ellipsis">{page}</span>
             ) : (
               <button
+                type="button"
                 className={`pagination-number ${currentPage === page ? 'active' : ''}`}
                 onClick={() => handlePageChange(page as number)}
               >
@@ -92,6 +103,7 @@ const Pagination = ({
           className="pagination-arrow"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
+          type="button"
         >
           <ChevronRight size={16} />
         </button>
@@ -103,8 +115,6 @@ const Pagination = ({
           align-items: center;
           justify-content: space-between;
           padding: 16px 20px;
-          background: #FFFFFF;
-          border-top: 1px solid #E5E5E5;
           font-family: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
@@ -252,6 +262,5 @@ const Pagination = ({
     </div>
   );
 };
-
 
 export default Pagination;

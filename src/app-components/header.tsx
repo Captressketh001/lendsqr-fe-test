@@ -1,12 +1,10 @@
-import  { useState } from 'react';
 import {
   ChevronDown,
   Menu,
-  Bell,
-  Search,
+  Bell
 } from 'lucide-react';
+import SearchBar from './search';
 const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
-  const [searchValue, setSearchValue] = useState('');
 
   return (
     <header className="header">
@@ -22,7 +20,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="header-search">
+        {/* <div className="header-search">
           <input
             type="text"
             placeholder="Search for anything"
@@ -33,7 +31,8 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <button className="search-btn">
             <Search size={16} />
           </button>
-        </div>
+        </div> */}
+        <SearchBar placeholder='Search for anything'/>
       </div>
 
       <div className="header-right">
@@ -217,19 +216,10 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
           border-radius: 10px;
         }
 
-        .sidebar-version {
-          padding: 30px;
-          color: #213F7D;
-          font-size: 12px;
-          opacity: 0.4;
-          text-align: center;
-          border-top: 1px solid #E5E5E5;
-          margin-top: auto;
-        }
+        
+        
 
-        .sidebar-overlay {
-          display: none;
-        }
+        
 
         /* Header Styles */
         .header {

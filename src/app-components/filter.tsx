@@ -1,6 +1,21 @@
-import { FilterFormProps, FilterValues } from "@/interface-and-types";
-import { useState, useEffect, useRef } from "react";
-import { Calendar } from "lucide-react";
+import React, { useRef, useEffect, useState } from 'react';
+
+interface FilterFormProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onFilter: (filters: FilterValues) => void;
+  onReset: () => void;
+}
+
+export interface FilterValues {
+  organization: string;
+  username: string;
+  email: string;
+  date: string;
+  phoneNumber: string;
+  status: string;
+}
+
 const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => {
   const [filters, setFilters] = useState<FilterValues>({
     organization: '',
@@ -51,12 +66,13 @@ const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => 
       status: '',
     });
     onReset();
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="filter-form-overlay">
+    <div className="filter-form-wrapper">
       <div className="filter-form" ref={formRef}>
         <div className="filter-form-group">
           <label htmlFor="organization">Organization</label>
@@ -112,7 +128,6 @@ const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => 
               onChange={handleChange}
               className="filter-input filter-date"
             />
-            <Calendar size={16} className="date-icon" />
           </div>
         </div>
 
@@ -155,28 +170,23 @@ const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => 
           </button>
         </div>
       </div>
-      <style>
-        {`
-            /* Filter Form Styles */
-        .filter-form-overlay {
-          position: fixed;
-          top: 0;
+
+      <style>{`
+        .filter-form-wrapper {
+          position: absolute;
+          top: 100%;
           left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 999;
-          background: transparent;
+          z-index: 1000;
+          margin-top: 8px;
         }
 
         .filter-form {
-          position: absolute;
           background: #FFFFFF;
           border: 1px solid #04498580;
           border-radius: 4px;
           box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
           padding: 30px;
           width: 270px;
-          z-index: 1000;
         }
 
         .filter-form-group {
@@ -232,7 +242,7 @@ const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => 
         }
 
         .filter-date {
-          padding-right: 40px;
+          
         }
 
         .date-icon {
@@ -280,10 +290,9 @@ const FilterForm = ({ isOpen, onClose, onFilter, onReset }: FilterFormProps) => 
         .filter-submit-btn:hover {
           background: #2DB8B7;
         }
-
-        `}
-      </style>
+      `}</style>
     </div>
   );
 };
-export default FilterForm
+
+export default FilterForm;

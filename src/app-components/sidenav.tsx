@@ -1,76 +1,58 @@
 import  { useState } from 'react';
 import {
-  Home,
-  Users,
-  UserCheck,
-  UserX,
-  Briefcase,
-  PiggyBank,
-  HandCoins,
-  UserCog,
-  Scroll,
-  BarChart3,
-  Sliders,
-  Award,
-  ClipboardList,
-  FileText,
-//   Settings,
-//   UserCircle,
-  Building2,
   ChevronDown,
-//   Menu,
   X,
-//   Bell,
-//   Search,
-//   LogOut,
 } from 'lucide-react';
 
 import { SidebarSection } from '@/interface-and-types';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-// Sidebar Component
 const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const [activeItem, setActiveItem] = useState('Users');
+  
+  const navigate = useNavigate()
+  const location = useLocation()
   const [organizationOpen, setOrganizationOpen] = useState(true);
 
   const sidebarSections: SidebarSection[] = [
     {
       items: [
-        { icon: <Home size={16} />, label: 'Dashboard', path: '/dashboard' },
+        { icon: <img src="/dashboard.svg"/>, label: 'Dashboard', path: '/dashboard' },
       ],
     },
     {
       title: 'CUSTOMERS',
       items: [
-        { icon: <UserCheck size={16} />, label: 'Users', path: '/users' },
-        { icon: <Users size={16} />, label: 'Guarantors', path: '/guarantors' },
-        { icon: <Briefcase size={16} />, label: 'Loans', path: '/loans' },
-        { icon: <HandCoins size={16} />, label: 'Decision Models', path: '/decision-models' },
-        { icon: <PiggyBank size={16} />, label: 'Savings', path: '/savings' },
-        { icon: <HandCoins size={16} />, label: 'Loan Requests', path: '/loan-requests' },
-        { icon: <UserCog size={16} />, label: 'Whitelist', path: '/whitelist' },
-        { icon: <UserX size={16} />, label: 'Karma', path: '/karma' },
+        { icon: <img src="/users.svg"/>, label: 'Users', path: '/users' },
+        { icon: <img src="/guarantor.svg"/>, label: 'Guarantors', path: '/guarantors' },
+        { icon: <img src="/loan.svg"/>, label: 'Loans', path: '/loans' },
+        { icon: <img src="/decision.svg"/>, label: 'Decision Models', path: '/decision-models' },
+        { icon: <img src="/savings.svg"/>, label: 'Savings', path: '/savings' },
+        { icon: <img src="/loan-request.svg"/>, label: 'Loan Requests', path: '/loan-requests' },
+        { icon: <img src="/whitelist.svg"/>, label: 'Whitelist', path: '/whitelist' },
+        { icon: <img src="/karma.svg"/>, label: 'Karma', path: '/karma' },
       ],
     },
     {
       title: 'BUSINESSES',
       items: [
-        { icon: <Briefcase size={16} />, label: 'Organization', path: '/organization' },
-        { icon: <HandCoins size={16} />, label: 'Loan Products', path: '/loan-products' },
-        { icon: <PiggyBank size={16} />, label: 'Savings Products', path: '/savings-products' },
-        { icon: <FileText size={16} />, label: 'Fees and Charges', path: '/fees' },
-        { icon: <ClipboardList size={16} />, label: 'Transactions', path: '/transactions' },
-        { icon: <Building2 size={16} />, label: 'Services', path: '/services' },
-        { icon: <UserCog size={16} />, label: 'Service Account', path: '/service-account' },
-        { icon: <Scroll size={16} />, label: 'Settlements', path: '/settlements' },
-        { icon: <BarChart3 size={16} />, label: 'Reports', path: '/reports' },
+        { icon: <img src="/organisation.svg"/>, label: 'Organization', path: '/organization' },
+        { icon: <img src="/loan-request.svg"/>, label: 'Loan Products', path: '/loan-products' },
+        { icon: <img src="/saving-product.svg"/>, label: 'Savings Products', path: '/savings-products' },
+        { icon: <img src="/fee.svg"/>, label: 'Fees and Charges', path: '/fees' },
+        { icon: <img src="/transaction.svg"/>, label: 'Transactions', path: '/transactions' },
+        { icon: <img src="/services.svg"/>, label: 'Services', path: '/services' },
+        { icon: <img src="/service-account.svg"/>, label: 'Service Account', path: '/service-account' },
+        { icon: <img src="/settlement.svg"/>, label: 'Settlements', path: '/settlements' },
+        { icon: <img src="/report.svg"/>, label: 'Reports', path: '/reports' },
       ],
     },
     {
       title: 'SETTINGS',
       items: [
-        { icon: <Sliders size={16} />, label: 'Preferences', path: '/preferences' },
-        { icon: <Award size={16} />, label: 'Fees and Pricing', path: '/pricing' },
-        { icon: <ClipboardList size={16} />, label: 'Audit Logs', path: '/audit-logs' },
+        { icon: <img src="/preference.svg"/>, label: 'Preferences', path: '/preferences' },
+        { icon: <img src="/pricing.svg"/>, label: 'Fees and Pricing', path: '/pricing' },
+        { icon: <img src="/audit.svg"/>, label: 'Audit Logs', path: '/audit-logs' },
+         { icon: <img src="/system-messages.svg"/>, label: 'Systems Messages', path: '/system-messages' },
       ],
     },
   ];
@@ -100,7 +82,7 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
             className="organization-btn"
             onClick={() => setOrganizationOpen(!organizationOpen)}
           >
-            <Briefcase size={16} />
+            <img src="/organisation.svg"/>
             <span>Switch Organization</span>
             <ChevronDown size={16} className={organizationOpen ? 'rotate' : ''} />
           </button>
@@ -115,11 +97,11 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
               )}
               <ul className="sidebar-menu">
                 {section.items.map((item, itemIndex) => (
-                  <li key={itemIndex}>
+                  <li key={itemIndex} >
                     <button
-                      className={`sidebar-menu-item ${activeItem === item.label ? 'active' : ''}`}
+                      className={`sidebar-menu-item ${location.pathname === item.path ? 'active' : ''}`}
                       onClick={() => {
-                        setActiveItem(item.label);
+                        navigate(item.path)
                         onClose();
                       }}
                     >
@@ -136,10 +118,22 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
           ))}
         </nav>
 
-        {/* Version */}
+        
+        <div className="sidebar-version-container">
+          <div className="sidebar-organization">
+          <button 
+            className="organization-btn"
+          >
+            <img src="/sign-out.svg"/>
+            <span>Logout</span>
+          </button>
+        </div>
         <div className="sidebar-version">
           v1.2.0
         </div>
+        </div>
+        
+        
         <style>{`
         * {
           margin: 0;
@@ -306,13 +300,17 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
           border-radius: 10px;
         }
 
+        .sidebar-version-container{
+          padding-top:15px;
+          border-top: 1px solid #E5E5E5;
+        }
         .sidebar-version {
           padding: 30px;
           color: #213F7D;
           font-size: 12px;
           opacity: 0.4;
-          text-align: center;
-          border-top: 1px solid #E5E5E5;
+          
+          
           margin-top: auto;
         }
 

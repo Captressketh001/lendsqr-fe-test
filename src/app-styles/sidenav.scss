@@ -1,0 +1,219 @@
+// 1. Variables
+$sidebar-width: 283px;
+$header-height: 100px;
+$header-height-mobile: 80px;
+
+$color-primary: #213F7D;
+$color-accent: #39CDCC;
+$color-bg: #FBFBFB;
+$color-white: #FFFFFF;
+$color-border: #E5E5E5;
+$color-text-muted: #545F7D;
+
+$transition-base: 0.3s ease;
+$shadow-sidebar: 0 0 40px rgba(0, 0, 0, 0.05);
+
+// 2. Mixins
+@mixin scrollbar-custom {
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: #D4D4D4;
+    border-radius: 3px;
+  }
+}
+
+// 3. Global Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Work Sans', -apple-system, sans-serif;
+  background: $color-bg;
+  overflow-x: hidden;
+}
+
+// 4. Layout & Sidebar
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: $sidebar-width;
+  background: $color-white;
+  border-right: 1px solid $color-border;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  overflow-y: auto;
+  transition: transform $transition-base;
+  z-index: 1000;
+  box-shadow: $shadow-sidebar;
+  @include scrollbar-custom;
+
+  @media (max-width: 1024px) {
+    transform: translateX(-100%);
+    &.sidebar-open { transform: translateX(0); }
+  }
+
+  &-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 30px 30px 20px;
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: $color-primary;
+    }
+  }
+
+  &-menu {
+    list-style: none;
+
+    &-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 30px;
+      background: none;
+      border: none;
+      border-left: 3px solid transparent;
+      color: $color-primary;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+      text-align: left;
+
+      &:hover {
+        opacity: 1;
+        background: rgba($color-primary, 0.02);
+      }
+
+      &.active {
+        background: rgba($color-accent, 0.06);
+        border-left-color: $color-accent;
+        opacity: 1;
+      }
+    }
+  }
+
+  &-section-title {
+    font-size: 12px;
+    color: $color-text-muted;
+    font-weight: 500;
+    padding: 0 30px;
+    margin: 30px 0 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+}
+
+// 5. Header
+.header {
+  height: $header-height;
+  background: $color-white;
+  border-bottom: 1px solid $color-border;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  @media (max-width: 768px) {
+    height: $header-height-mobile;
+    padding: 0 20px;
+  }
+
+  &-search {
+    display: flex;
+    max-width: 400px;
+    flex: 1;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    overflow: hidden;
+
+    @media (max-width: 768px) { max-width: 200px; }
+    @media (max-width: 480px) { display: none; }
+
+    .search-input {
+      flex: 1;
+      border: none;
+      padding: 12px 16px;
+      outline: none;
+      color: $color-primary;
+      &::placeholder { color: #9CA3AF; }
+    }
+
+    .search-btn {
+      background: $color-accent;
+      border: none;
+      padding: 0 20px;
+      color: $color-white;
+      cursor: pointer;
+    }
+  }
+
+  &-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      @media (max-width: 480px) { width: 32px; height: 32px; }
+    }
+    
+    .user-name {
+      color: $color-primary;
+      font-weight: 500;
+      @media (max-width: 768px) { display: none; }
+    }
+  }
+}
+
+// 6. Main Content Area
+.main-wrapper {
+  flex: 1;
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left $transition-base;
+
+  @media (max-width: 1024px) {
+    margin-left: 0;
+  }
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  @media (max-width: 768px) { padding: 20px; }
+  @media (max-width: 480px) { padding: 16px; }
+}
+
+// 7. Overlay
+.sidebar-overlay {
+  display: none;
+  @media (max-width: 1024px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}

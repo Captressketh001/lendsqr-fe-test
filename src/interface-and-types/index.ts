@@ -85,3 +85,66 @@ export interface SidebarSection {
   title?: string;
   items: SidebarItem[];
 }
+export interface UserData {
+  id: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  dateJoined: string;
+  status: "active" | "inactive" | "pending" | "blacklisted"
+  organization: string;
+  personalInfo: {
+    fullName: string;
+    phoneNumber: string;
+    emailAddress: string;
+    bvn: string;
+    gender: string;
+    maritalStatus: string;
+    children: string;
+    typeOfResidence: string;
+  };
+  educationAndEmployment: {
+    levelOfEducation: string;
+    employmentStatus: string;
+    sectorOfEmployment: string;
+    durationOfEmployment: string;
+    officeEmail: string;
+    monthlyIncome: string;
+    loanRepayment: string;
+  };
+  socials: {
+    twitter: string;
+    facebook: string;
+    instagram: string;
+  };
+  guarantor: {
+    fullName: string;
+    phoneNumber: string;
+    emailAddress: string;
+    relationship: string;
+  };
+  accountBalance: number;
+  accountNumber: string;
+  bank: string;
+  tier: number;
+  lastActiveDate: string;
+}
+
+export interface Stats {
+  totalUsers: number;
+  activeUsers: number;
+  usersWithLoans: number;
+  usersWithSavings: number;
+}
+
+export interface FilterParams {
+  query?: string;
+  organization?: string;
+  username?: string;
+  email?: string;
+  phoneNumber?: string;
+  status?: string;
+  date?: string;
+}
+
+export type UserStatus = 'active' | 'inactive' | 'blacklisted' | 'pending';

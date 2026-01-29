@@ -1,0 +1,181 @@
+// 1. Variables
+$color-bg-app: #FBFBFB;
+$color-bg-card: #FFFFFF;
+$color-primary: #213F7D;
+$color-accent: #39CDCC;
+$color-accent-hover: #2DB8B7;
+$color-text-label: #545F7D;
+$color-border-gray: #E5E5E5;
+$color-placeholder: #9CA3AF;
+
+$shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.04);
+$shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+$font-stack: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+// 2. Base & Container
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-stack;
+  background: $color-bg-app;
+}
+
+.app-container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+// 3. Demo Typography
+.demo {
+  &-title {
+    font-size: 32px;
+    color: $color-primary;
+    margin-bottom: 40px;
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+  }
+
+  &-section {
+    margin-bottom: 50px;
+
+    h3 {
+      font-size: 20px;
+      color: $color-text-label;
+      margin-bottom: 20px;
+      font-weight: 500;
+
+      @media (max-width: 480px) {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// 4. Stats Component
+.stats {
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 26px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &-card {
+    background: $color-bg-card;
+    border: 1px solid $color-border-gray;
+    border-radius: 4px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    box-shadow: $shadow-soft;
+
+    &:hover {
+      box-shadow: $shadow-hover;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+
+    .icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .label {
+      font-size: 14px;
+      color: $color-text-label;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .value {
+      font-size: 24px;
+      color: $color-primary;
+      font-weight: 600;
+
+      @media (max-width: 768px) {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+// 5. Search Bar Component
+.search {
+  &-bar {
+    display: flex;
+    max-width: 400px;
+    background: $color-bg-card;
+    border: 1px solid $color-border-gray;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: $shadow-soft;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+  }
+
+  &-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: $color-primary;
+    font-family: inherit;
+
+    &::placeholder {
+      color: $color-placeholder;
+    }
+  }
+
+  &-button {
+    background: $color-accent;
+    border: none;
+    padding: 0 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+    color: #FFFFFF;
+
+    &:hover {
+      background: $color-accent-hover;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

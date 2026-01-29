@@ -1,0 +1,86 @@
+// 1. Variables
+$color-primary: #39CDCC;
+$color-primary-hover: #2DB8B7;
+$color-secondary: #213F7D;
+$color-secondary-hover: #1A3261;
+$color-danger: #E4033B;
+$color-danger-hover: #C7032F;
+$color-white: #FFFFFF;
+
+// 2. Mixins for reusable logic
+@mixin button-size($padding, $font-size) {
+  padding: $padding;
+  font-size: $font-size;
+}
+
+@mixin flex-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+// 3. Layout Styles
+.button-group,
+.badge-group {
+  @include flex-group;
+}
+
+// 4. Base Button Component
+.btn {
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  @include button-size(12px 24px, 14px); // Default medium
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Variants
+  &-primary {
+    background: $color-primary;
+    color: $color-white;
+    &:hover { background: $color-primary-hover; }
+  }
+
+  &-secondary {
+    background: $color-secondary;
+    color: $color-white;
+    &:hover { background: $color-secondary-hover; }
+  }
+
+  &-danger {
+    background: $color-danger;
+    color: $color-white;
+    &:hover { background: $color-danger-hover; }
+  }
+
+  &-outlined {
+    background: transparent;
+    color: $color-danger;
+    border: 1px solid $color-danger;
+    &:hover { background: rgba($color-danger, 0.05); }
+  }
+
+  // Sizes
+  &-small  { @include button-size(8px 16px, 12px); }
+  &-medium { @include button-size(12px 24px, 14px); }
+  &-large  { @include button-size(16px 32px, 16px); }
+}
+
+// 5. Media Queries
+@media (max-width: 480px) {
+  .button-group,
+  .badge-group {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}

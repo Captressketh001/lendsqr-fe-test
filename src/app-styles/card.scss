@@ -1,0 +1,185 @@
+// 1. Variables
+$color-bg-body: #FBFBFB;
+$color-bg-card: #FFFFFF;
+$color-primary: #213F7D;
+$color-accent: #39CDCC;
+$color-accent-hover: #2DB8B7;
+$color-text-muted: #545F7D;
+$color-border: #E5E5E5;
+$color-placeholder: #9CA3AF;
+
+$font-main: 'Work Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$transition-base: all 0.3s ease;
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+// 2. Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// 3. Reset & Global
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-main;
+  background: $color-bg-body;
+}
+
+// 4. Layout Components
+.app-container {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+}
+
+.demo {
+  &-title {
+    font-size: 32px;
+    color: $color-primary;
+    margin-bottom: 40px;
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+  }
+
+  &-section {
+    margin-bottom: 50px;
+
+    h3 {
+      font-size: 20px;
+      color: $color-text-muted;
+      margin-bottom: 20px;
+      font-weight: 500;
+
+      @media (max-width: 480px) {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// 5. Stats Cards
+.stats {
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 26px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &-card {
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    padding: 30px;
+    transition: $transition-base;
+    box-shadow: $shadow-sm;
+
+    &:hover {
+      box-shadow: $shadow-md;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px;
+    }
+
+    .icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-bottom: 14px;
+      @include flex-center;
+    }
+
+    .label {
+      font-size: 14px;
+      color: $color-text-muted;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .value {
+      font-size: 24px;
+      color: $color-primary;
+      font-weight: 600;
+
+      @media (max-width: 768px) {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+// 6. Search Bar
+.search {
+  &-bar {
+    display: flex;
+    max-width: 400px;
+    background: $color-bg-card;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
+  }
+
+  &-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 20px;
+    font-size: 14px;
+    color: $color-primary;
+    font-family: inherit;
+
+    &::placeholder {
+      color: $color-placeholder;
+    }
+  }
+
+  &-button {
+    background: $color-accent;
+    border: none;
+    padding: 0 24px;
+    cursor: pointer;
+    color: #FFFFFF;
+    transition: $transition-base;
+    @include flex-center;
+
+    &:hover {
+      background: $color-accent-hover;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}

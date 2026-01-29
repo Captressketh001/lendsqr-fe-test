@@ -126,8 +126,8 @@ const Table = () => {
   };
 
   return (
-    <div className="app-container">
-      <h1 className="page-title">Users</h1>
+   
+      
 
       <div className="table-container">
         <table className="data-table">
@@ -197,7 +197,7 @@ const Table = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      
 
       <style>{`
         .page-title {
