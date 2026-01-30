@@ -3,8 +3,9 @@ import {
   Menu,
 } from 'lucide-react';
 import SearchBar from './search';
+import { useNavigate } from 'react-router-dom';
 const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
-
+  const navigate = useNavigate()
   return (
     <header className="header">
       <div className="header-left">
@@ -12,7 +13,7 @@ const Header = ({ onMenuClick }: { onMenuClick: () => void }) => {
           <Menu size={24} />
         </button>
         <div className="header-logo-mobile">
-          <img src='/logo.svg'/>
+          <img onClick={() => navigate('/')} src='/logo.svg'/>
         </div>
         <SearchBar placeholder='Search for anything'/>
       </div>

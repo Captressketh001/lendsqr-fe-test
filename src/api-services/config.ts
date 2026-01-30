@@ -1,5 +1,6 @@
+
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:5174',
+  BASE_URL: import.meta.env.VITE_API_URL,
   ENDPOINTS: {
     USERS: '/users'
   }

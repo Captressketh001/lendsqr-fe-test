@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "server": "json-server --watch db.json --port 5174",
+    "server": "json-server --watch db.json --port 5174 ./public",
     "generate:data": "ts-node generateUsers.ts",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "lint": "eslint .",

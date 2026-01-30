@@ -8,7 +8,6 @@ import { SidebarSection } from '@/interface-and-types';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  
   const navigate = useNavigate()
   const location = useLocation()
   const [organizationOpen, setOrganizationOpen] = useState(true);
@@ -59,24 +58,19 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
 
   return (
     <>
-      {/* Mobile Overlay */}
       {isOpen && (
         <div className="sidebar-overlay" onClick={onClose} />
       )}
 
-      {/* Sidebar */}
       <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
-        {/* Mobile Close Button */}
         <button className="sidebar-close-btn" onClick={onClose}>
           <X size={24} />
         </button>
 
-        {/* Logo */}
         <div className="sidebar-logo">
-          <img src='/logo.svg'/>
+          <img onClick={() => navigate('/')} src='/logo.svg'/>
         </div>
 
-        {/* Organization Dropdown */}
         <div className="sidebar-organization">
           <button 
             className="organization-btn"
@@ -87,8 +81,6 @@ const Sidebar = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) 
             <ChevronDown size={16} className={organizationOpen ? 'rotate' : ''} />
           </button>
         </div>
-
-        {/* Navigation */}
         <nav className="sidebar-nav">
           {sidebarSections.map((section, sectionIndex) => (
             <div key={sectionIndex} className="sidebar-section">
