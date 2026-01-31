@@ -9,7 +9,6 @@ const isIndexedDBSupported = (): boolean => {
   return typeof indexedDB !== 'undefined';
 };
 
-
 export const fetchAndCacheUsers = async (): Promise<UserData[]> => {
   try {
     console.log('Fetching users from API...');
@@ -22,7 +21,6 @@ export const fetchAndCacheUsers = async (): Promise<UserData[]> => {
     const result = await response.json();
     const users = result.data || result;
 
-    // Cache users
     if (isIndexedDBSupported()) {
       console.log('Caching users to IndexedDB...');
       await saveAllUsers(users);
@@ -150,7 +148,7 @@ export const getPaginatedUsers = async (
     // Get all users from cache or API
     let allUsers = await getUsers();
 
-    // Apply filters if provided
+    
     if (filters) {
       allUsers = applyFilters(allUsers, filters);
     }

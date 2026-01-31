@@ -164,6 +164,23 @@ lendsqr-fe-test/
 ├── src/
 │   ├── api-services/          # API service layer
 │   │   └── user.ts
+│   │   └── config.ts
+│   │   └── __tests__/
+│   │   └── user.test.ts
+│   ├── app-styles/          # API service layer
+│   │   └── badge.scss
+│   │   └── button.scss
+│   │   └── card.scss
+│   │   └── dropdown.scss
+│   │   └── details.scss
+│   │   └── filter.scss
+│   │   └── header.scss
+│   │   └── login.scss
+│   │   └── search.scss
+│   │   └── pagination.scss
+│   │   └── sidenav.scss
+│   │   └── table.scss
+│   │   └── user.scss
 │   ├── app-components/        # Reusable UI components
 │   │   ├── badge.tsx
 │   │   ├── button.tsx
@@ -179,19 +196,24 @@ lendsqr-fe-test/
 │   │   ├── Login.tsx
 │   │   ├── Users.tsx
 │   │   └── UserDetails.tsx
+│   ├── app-routes/                 # Routes
+│   │   ├── index.tsx
 │   ├── utils/                 # Utility functions
 │   │   ├── indexedDB.ts
 │   │   └── localStorage.ts
-│   ├── config/                # Configuration files
-│   │   └── api.ts
+│   │   └── lib.ts
+│   │   └── schema.ts
 │   ├── interface-and-types/   # TypeScript interfaces
 │   │   └── index.ts
 │   ├── App.tsx
 │   └── main.tsx
+│   └── App.scss
+│   └── index.scss
 ├── db.json                    # Generated mock data
 ├── generateUsers.ts           # Script to generate mock data
 ├── package.json
 └── tsconfig.json
+└── vitest.config.ts
 ```
 
 ## 🎨 Design Decisions
@@ -220,7 +242,7 @@ lendsqr-fe-test/
 ## 👨‍💻 Author
 
 **Oluwakemi Omoyeni**
-- LinkedIn: [Your LinkedIn Profile](https://www.linkedin.com/in/oluwakemi-omoyeni/)
+- LinkedIn: [https://www.linkedin.com/in/oluwakemi-omoyeni/](https://www.linkedin.com/in/oluwakemi-omoyeni/)
 
 ---
 
